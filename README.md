@@ -37,7 +37,6 @@ Additionally, the project controls:
 * Breadboard
 * Jumper wires
 * Resistors
-* USB power supply
 
 ## Features
 
@@ -48,70 +47,18 @@ Additionally, the project controls:
 * Soil moisture monitoring
 * Automatic cooling fan activation when temperature exceeds a threshold
 * WiFi connection using ESP32
-* HTTP API endpoint for reading sensor data remotely
+* HTTP API endpoints for reading sensor data and controlling outputs remotely
 
-## Software
 
-The project was programmed in:
+### I managed to learn a lot. This project showed me:
+How GPIO pins work on ESP32 and how to handle unstable GPIO states,
+Differences between digital and analog sensors,
+How to use pull-up and pull-down logic,
+How relays work
+How to build HTTP APIs on ESP32
+How to manage power distribution and wired connections
+How to debug many hardware and software issues that occured during development.
 
-* Arduino IDE
-* C++
+This entire prototype was built using breadboard and jumper wires, so for the future projects I'm planning to use soldering iron to improve cable managment and hardware reliability.
 
-The ESP32 hosts a simple HTTP server that exposes sensor data in JSON format.
 
-Example endpoint:
-
-```json
-{
-  "temperature": 24.3,
-  "humidity": 51.8,
-  "soil": 2780
-}
-```
-
-## What I Learned
-
-During this project I learned:
-
-* how GPIO pins work on ESP32,
-* differences between digital and analog sensors,
-* how to use pull-up and pull-down logic,
-* how relays work,
-* how to debug hardware problems,
-* how to connect sensors using a breadboard,
-* how to build HTTP APIs on ESP32,
-* basics of embedded systems and IoT development,
-* how power distribution works in electronic systems.
-
-I also learned how important proper wiring and voltage management are, especially when mixing 3.3V and 5V devices.
-
-## Challenges
-
-Some of the biggest challenges included:
-
-* debugging relay behavior,
-* handling unstable GPIO states,
-* troubleshooting incorrect VCC/GND connections,
-* managing power consumption from multiple sensors,
-* understanding how PIR and MQ-2 sensors behave during calibration.
-
-## Future Improvements
-
-This entire prototype was built only using:
-
-* a breadboard,
-* jumper wires,
-* temporary connections.
-
-In the next version of the project I plan to:
-
-* solder the components permanently,
-* improve cable management,
-* use external power supplies,
-* add more actuators and sensors,
-* create a web dashboard or mobile app,
-* improve enclosure and hardware reliability.
-
-## Summary
-
-This project was my first larger ESP32 and embedded systems project. It helped me understand both software and hardware aspects of IoT development, including sensor integration, automation logic, networking, and electronics debugging.
