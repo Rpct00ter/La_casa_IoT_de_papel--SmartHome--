@@ -41,6 +41,10 @@ WebServer server(80);
 // LED
 // =========================
 #define LED_PIN 22
+#define LED1_PIN 16
+#define LED2_PIN 21
+#define LED3_PIN 32
+#define LED4_PIN 33
 
 // ========================
 // Wentylator
@@ -68,6 +72,10 @@ float currentHumidity = 0;
 int klimatyzacja = 0;
 int zazbrojenie = 0;
 int currentSoil = 0;
+int led1 = 1;
+int led2 = 1;
+int led3 = 1;
+int led4 = 1;
 // =========================
 // API
 // =========================
@@ -142,7 +150,10 @@ void setup() {
   // LED
   // =========================
   pinMode(LED_PIN, OUTPUT);
-
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED3_PIN, OUTPUT);
+  pinMode(LED4_PIN, OUTPUT);
   Serial.println("System uruchomiony");
   // =======================
   // Wentylator
@@ -230,7 +241,7 @@ void loop() {
   }
 
   // =========================
-  // Czujnik światła
+  // Czujnik światła + LED'y
   // =========================
 
   int lightState = digitalRead(LIGHT_PIN);
@@ -248,6 +259,10 @@ void loop() {
     Serial.println("Jest ciemno");
     digitalWrite(LED_PIN, HIGH);
   }
+  digitalWrite(LED1_PIN, led1);
+  digitalWrite(LED2_PIN, led2);
+  digitalWrite(LED3_PIN, led3);
+  digitalWrite(LED4_PIN, led4);
 
   // ==========================
   // WENTYLACJA
