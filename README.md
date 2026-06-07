@@ -1,5 +1,5 @@
 # La-casa-IoT-de-papel--SmartHome-
-###It's my first solo IoT project and it designs an IoT system that acts as a smart home in a simulated cardboard house. I used an ESP32 development board and multiple sensors connected through a breadboard.
+### It's my first solo IoT project and it designs an IoT system that acts as a smart home in a simulated cardboard house. I used an ESP32 development board and multiple sensors connected through a breadboard.
 
 The system monitors:
 
