@@ -5,8 +5,8 @@
 // =========================
 // WIFI
 // =========================
-//const char* ssid = "###";
-//const char* password = "###";
+//const char* ssid = "FFF";
+//const char* password = "FFF";
 
 const char* ssid = "###";
 const char* password = "###";
@@ -72,27 +72,122 @@ float currentHumidity = 0;
 int klimatyzacja = 0;
 int zazbrojenie = 0;
 int currentSoil = 0;
-int led1 = 1;
-int led2 = 1;
-int led3 = 1;
-int led4 = 1;
+int led1 = 0;
+int led2 = 0;
+int led3 = 0;
+int led4 = 0;
+
+int podlewanie = 0;
+
+bool currentMotion = false;
+bool currentGas = false;
+bool currentLight = false;
+bool currentFan = false;
 // =========================
 // API
 // =========================
-void handleTemperature()
+void losSensores()
 {
-  String json = "{";
-  json += "\"temperature\": ";
-  json += String(currentTemperature);
-  json += ",";
+    String json = "{";
 
-  json += "\"humidity\": ";
-  json += String(currentHumidity);
+    json += "\"temperatura\": ";
+    json += String(currentTemperature);
+    json += ",";
 
-  json += "}";
+    json += "\"wilgotnosc\": ";
+    json += String(currentHumidity);
+    json += ",";
 
-  server.send(200, "application/json", json);
+    json += "\"wilgotnoscGleby\": ";
+    json += String(currentSoil);
+    json += ",";
+
+    json += "\"ruch\": ";
+    json += currentMotion ? "true" : "false";
+    json += ",";
+
+    json += "\"gaz\": ";
+    json += currentGas ? "true" : "false";
+    json += ",";
+
+    json += "\"poziomSwiatla\": ";
+    json += currentLight ? "true" : "false";
+    json += ",";
+
+    json += "\"wiatrak\": ";
+    json += currentFan ? "true" : "false";
+    json += ",";
+
+    json += "\"podlewanie\": ";
+    json += podlewanie ? "true" : "false";
+    json += ",";
+
+    json += "\"alarm\": ";
+    json += zazbrojenie ? "true" : "false";
+    json += ",";
+
+    json += "\"zapaloneSwiatlo1\": ";
+    json += led1 ? "true" : "false";
+    json += ",";
+
+    json += "\"zapaloneSwiatlo2\": ";
+    json += led2 ? "true" : "false";
+    json += ",";
+
+    json += "\"zapaloneSwiatlo3\": ";
+    json += led3 ? "true" : "false";
+    json += ",";
+
+    json += "\"zapaloneSwiatlo4\": ";
+    json += led4 ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
+
+void handleFan()
+{
+    klimatyzacja = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleAlarm()
+{
+    zazbrojenie = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleWatering()
+{
+    podlewanie = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleLed1()
+{
+    led1 = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleLed2()
+{
+    led2 = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleLed3()
+{
+    led3 = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
+void handleLed4()
+{
+    led4 = server.arg("plain") == "true";
+    server.send(200, "text/plain", "OK");
+}
+
 
 void setup() {
 
@@ -120,7 +215,14 @@ void setup() {
   // =========================
   // HTTP endpoint
   // =========================
-  server.on("/odczyt_sensorow", handleTemperature);
+  server.on("/odczyt_sensorow", losSensores);
+  server.on("/wiatrak", HTTP_POST, handleFan);
+  server.on("/alarm", HTTP_POST, handleAlarm);
+  server.on("/podlewanie", HTTP_POST, handleWatering);
+  server.on("/zapaloneSwiatlo1", HTTP_POST, handleLed1);
+  server.on("/zapaloneSwiatlo2", HTTP_POST, handleLed2);
+  server.on("/zapaloneSwiatlo3", HTTP_POST, handleLed3);
+  server.on("/zapaloneSwiatlo4", HTTP_POST, handleLed4);
 
   server.begin();
 
@@ -135,17 +237,14 @@ void setup() {
   // PIR
   // =========================
   pinMode(PIR_PIN, INPUT_PULLDOWN);
-
   // =========================
   // MQ-2
   // =========================
   pinMode(GAS_PIN, INPUT);
-
   // =========================
   // Światło
   // =========================
   pinMode(LIGHT_PIN, INPUT);
-
   // =========================
   // LED
   // =========================
@@ -202,7 +301,7 @@ void loop() {
   // =========================
 
   int motion = digitalRead(PIR_PIN);
-
+  currentMotion = motion == HIGH;
   if (motion == HIGH) {
 
       Serial.println("Wykryto ruch!");
@@ -230,7 +329,7 @@ void loop() {
   // =========================
 
   int gasState = digitalRead(GAS_PIN);
-
+  currentGas = gasState == HIGH;
   if (gasState == HIGH) {
 
     Serial.println("Wykryto szkodliwy gaz!");
@@ -245,7 +344,7 @@ void loop() {
   // =========================
 
   int lightState = digitalRead(LIGHT_PIN);
-
+  currentLight = lightState == HIGH;
   Serial.print("Poziom swiatla: ");
   Serial.println(lightState);
 
@@ -273,13 +372,14 @@ void loop() {
 
       // relay ON
       digitalWrite(RELAY_PIN, LOW);
-
+      currentFan = true;
   } else {
 
       Serial.println("WIATRACZEK OFF");
 
       // relay OFF
       digitalWrite(RELAY_PIN, HIGH);
+      currentFan = false;
   }
 
   // =========================
