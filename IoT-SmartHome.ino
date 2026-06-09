@@ -343,10 +343,12 @@ void loop() {
   if (gasState == HIGH) {
 
     Serial.println("Wykryto szkodliwy gaz!");
+    digitalWrite(BUZZER_PIN, HIGH);
 
   } else {
 
     Serial.println("Powietrze bezpieczne do oddychania");
+    digitalWrite(BUZZER_PIN, LOW);
   }
 
   // =========================
