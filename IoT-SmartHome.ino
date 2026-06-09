@@ -5,11 +5,11 @@
 // =========================
 // WIFI
 // =========================
-//const char* ssid = "FFF";
-//const char* password = "FFF";
-
 const char* ssid = "###";
 const char* password = "###";
+
+//const char* ssid = "###";
+//const char* password = "###";
 
 // =========================
 // HTTP SERVER
@@ -61,6 +61,10 @@ WebServer server(80);
 // ========================
 #define SOIL_PIN 34
 
+// ========================
+// Pompka wody
+// ========================
+#define WATER_RELAY_PIN 26
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -72,10 +76,10 @@ float currentHumidity = 0;
 int klimatyzacja = 0;
 int zazbrojenie = 0;
 int currentSoil = 0;
-int led1 = 0;
-int led2 = 0;
-int led3 = 0;
-int led4 = 0;
+int led1 = 1;
+int led2 = 1;
+int led3 = 1;
+int led4 = 1;
 
 int podlewanie = 0;
 
@@ -264,6 +268,12 @@ void setup() {
   // =======================
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
+
+  // =====================
+  // Pompka wodna
+  // =====================
+  pinMode(WATER_RELAY_PIN, OUTPUT);
+  digitalWrite(WATER_RELAY_PIN, HIGH);
 }
 
 void loop() {
@@ -396,12 +406,25 @@ void loop() {
   if (soilValue > 3000) {
 
       Serial.println("ZIEMIA SUCHA!");
+      podlewanie = 1;
 
   } else {
 
       Serial.println("Ziemia wilgotna");
+      podlewanie = 0;
   }
 
+  // ===================
+  // Jest pompa (wodna)
+  // ===================
+  if (podlewanie == 1) {
+    Serial.println("PODLEWANIE ON");
+    digitalWrite(WATER_RELAY_PIN, LOW);
+
+  } else {
+      Serial.println("PODLEWANIE OFF");
+      digitalWrite(WATER_RELAY_PIN, HIGH);
+  }
   Serial.println("----------------");
   delay(2000);
 }
