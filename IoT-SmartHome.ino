@@ -76,10 +76,12 @@ float currentHumidity = 0;
 int klimatyzacja = 0;
 int zazbrojenie = 0;
 int currentSoil = 0;
-int led1 = 1;
-int led2 = 1;
-int led3 = 1;
-int led4 = 1;
+int led1 = 0; //kuchnia
+int led2 = 0; //lazienka
+int led3 = 0; //pokoj numer 1
+int led4 = 0; //pokoj numer 2
+
+bool wyjec = false;
 
 int podlewanie = 0;
 
@@ -169,39 +171,98 @@ void handleFan()
 void handleAlarm()
 {
     zazbrojenie = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"alarm\",";
+    json += "\"state\": ";
+    json += zazbrojenie ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
 
 void handleWatering()
 {
     podlewanie = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"podlewanie\",";
+    json += "\"state\": ";
+    json += podlewanie ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
 
 void handleLed1()
 {
     led1 = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"zapaloneSwiatlo1\",";
+    json += "\"state\": ";
+    json += led1 ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
 
 void handleLed2()
 {
     led2 = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"zapaloneSwiatlo2\",";
+    json += "\"state\": ";
+    json += led2 ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
 
 void handleLed3()
 {
     led3 = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"zapaloneSwiatlo3\",";
+    json += "\"state\": ";
+    json += led3 ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
 
 void handleLed4()
 {
     led4 = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
-}
 
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"device\": \"zapaloneSwiatlo4\",";
+    json += "\"state\": ";
+    json += led4 ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
+}
 
 void setup() {
 
@@ -329,13 +390,8 @@ void loop() {
       if (zazbrojenie == 1) {
 
           Serial.println("ALARM!");
-
-          digitalWrite(BUZZER_PIN, HIGH);
-
-      } else {
-
-          digitalWrite(BUZZER_PIN, LOW);
-      }
+          wyjec = true;
+      } 
 
   } else {
 
@@ -353,7 +409,7 @@ void loop() {
   if (gasState == HIGH) {
 
     Serial.println("Wykryto szkodliwy gaz!");
-    digitalWrite(BUZZER_PIN, HIGH);
+    wyjec = true;
 
   } else {
 
@@ -426,6 +482,21 @@ void loop() {
       podlewanie = 0;
   }
 
+  // =========================
+  // S.O.S.
+  // =========================
+
+  if (wyjec) {
+
+      digitalWrite(BUZZER_PIN, HIGH);
+
+  } else {
+
+      digitalWrite(BUZZER_PIN, LOW);
+  }
+
+  wyjec = false;
+
   // ===================
   // Jest pompa (wodna)
   // ===================
@@ -438,5 +509,5 @@ void loop() {
       //digitalWrite(WATER_RELAY_PIN, HIGH);
   }
   Serial.println("----------------");
-  delay(2000);
+  delay(500);
 }
