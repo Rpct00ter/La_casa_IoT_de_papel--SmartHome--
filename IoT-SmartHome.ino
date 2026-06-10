@@ -64,7 +64,7 @@ WebServer server(80);
 // ========================
 // Pompka wody
 // ========================
-#define WATER_RELAY_PIN 26
+//#define WATER_RELAY_PIN 26
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -153,8 +153,18 @@ void losSensores()
 void handleFan()
 {
     klimatyzacja = server.arg("plain") == "true";
-    server.send(200, "text/plain", "OK");
+
+    String json = "{";
+
+    json += "\"success\": true,";
+    json += "\"wiatrak\": ";
+    json += klimatyzacja ? "true" : "false";
+
+    json += "}";
+
+    server.send(200, "application/json", json);
 }
+
 
 void handleAlarm()
 {
@@ -272,8 +282,8 @@ void setup() {
   // =====================
   // Pompka wodna
   // =====================
-  pinMode(WATER_RELAY_PIN, OUTPUT);
-  digitalWrite(WATER_RELAY_PIN, HIGH);
+ // pinMode(WATER_RELAY_PIN, OUTPUT);
+ // digitalWrite(WATER_RELAY_PIN, HIGH);
 }
 
 void loop() {
@@ -378,7 +388,7 @@ void loop() {
   // ==========================
   // WENTYLACJA
   // ==============================
-  if (temperature > 24 || klimatyzacja == 1) {
+  if (temperature > 26 || klimatyzacja == 1) {
 
       Serial.println("WIATRACZEK ON");
 
@@ -421,11 +431,11 @@ void loop() {
   // ===================
   if (podlewanie == 1) {
     Serial.println("PODLEWANIE ON");
-    digitalWrite(WATER_RELAY_PIN, LOW);
+    //digitalWrite(WATER_RELAY_PIN, LOW);
 
   } else {
       Serial.println("PODLEWANIE OFF");
-      digitalWrite(WATER_RELAY_PIN, HIGH);
+      //digitalWrite(WATER_RELAY_PIN, HIGH);
   }
   Serial.println("----------------");
   delay(2000);
