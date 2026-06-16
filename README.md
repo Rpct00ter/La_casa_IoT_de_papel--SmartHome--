@@ -12,6 +12,8 @@ Additionally, the project controls:
 * a cooling fan using a relay module,
 * LEDs, that simulate lamps across the whole house
 * an alarm buzzer.
+  
+<img width="4000" height="3000" alt="IMG_20260611_103120649_HDR" src="https://github.com/user-attachments/assets/a63ed616-819f-4186-9003-4bb71a86d5b7" />
 
 ## Hardware Used
 ### Main Controller
@@ -51,13 +53,13 @@ Additionally, the project controls:
 
 
 ### I managed to learn a lot. This project showed me:
-How GPIO pins work on ESP32 and how to handle unstable GPIO states,
-Differences between digital and analog sensors,
-How to use pull-up and pull-down logic,
-How relays work
-How to build HTTP APIs on ESP32
-How to manage power distribution and wired connections
-How to debug many hardware and software issues that occured during development.
+* How GPIO pins work on ESP32 and how to handle unstable GPIO states,  
+* Differences between digital and analog sensors,  
+* How to use pull-up and pull-down logic,  
+* How relays work,  
+* How to build HTTP APIs on ESP32,  
+* How to manage power distribution and wired connections,  
+* How to debug many hardware and software issues that occured during development.
 
 This entire prototype was built using breadboard and jumper wires, so for the future projects I'm planning to use soldering iron to improve cable managment and hardware reliability.
 
